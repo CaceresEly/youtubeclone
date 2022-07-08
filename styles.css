@@ -1,0 +1,75 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+}
+
+.menu-yt{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.logo{
+    display: flex;
+    align-items: center;
+    width: 100px;
+}
+
+.menu-links{
+    display: flex;
+    align-items: center;
+    gap: 35px;
+}
+
+.espaco-barra{
+    display: flex;
+    align-items: center;
+}
+
+.searchbtn{
+    width: 60rem;
+    height: 2rem;
+}
+
+.lupabtn{
+    width: 2.5rem;
+    height: 2rem;
+}
+
+.lupa{
+    width: 1.5rem;
+}
+
+.categorias{
+    padding: 1rem 2rem;
+    border-top: 1px solid #999;
+    border-bottom: 1px solid #999;
+}
+
+.categorias-sessao{
+    display: flex;
+    overflow: hidden;
+}
+
+.categoria{
+    margin-right: 1rem;
+    white-space: nowrap;
+    word-wrap: none;
+    border: 1px solid #ccc;
+    border-radius: 900px;
+    background-color: #e7e7e7;
+    padding: .5rem 1rem;
+}
+
+.conteudo-inteiro{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 1rem 2rem;
+}
+
+.banner{
+    width: 300px;
+}
