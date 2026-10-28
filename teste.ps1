@@ -1,9 +1,12 @@
-$Caminho = "COPY_PATH_HERE"
+$Path = "COPY_PATH_HERE"
 
-Write-Host "Caminho informado: [$Caminho]"
+$NormalizedPath = [System.IO.Path]::GetFullPath($Path.Trim().Trim('"')).TrimEnd('\')
 
-Write-Host "Existe?"
-Test-Path -LiteralPath $Caminho
+Write-Host "Original path: [$Path]"
+Write-Host "Normalized path: [$NormalizedPath]"
 
-Write-Host "Item encontrado:"
-Get-Item -LiteralPath $Caminho -ErrorAction Continue
+Write-Host "Original path exists:"
+Test-Path -LiteralPath $Path
+
+Write-Host "Normalized path exists:"
+Test-Path -LiteralPath $NormalizedPath
