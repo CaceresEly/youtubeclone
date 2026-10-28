@@ -20,7 +20,17 @@ $Global:RunTimestamp = Get-Date -Format "yyyyMMdd_HHmmss"
 $Global:LogsFolder = Join-Path -Path $Global:ScriptBase -ChildPath "Logs"
 $Global:PersistentMatrixPath = Join-Path -Path $Global:LogsFolder -ChildPath "StateMatrix.csv"
 $Global:LegacyPersistentMatrixPath = Join-Path -Path $Global:LogsFolder -ChildPath "MatrizEstado.csv"
-$Global:ValidSubFolders = @("BR", "CR", "EPDM", "EVM", "HNBR", "IIR", "NBR", "SBR", "INOVAÇÃO")
+$Global:ValidSubFolders = @(
+    "BR",
+    "CR",
+    "EPDM",
+    "EVM",
+    "HNBR",
+    "IIR",
+    "NBR",
+    "SBR",
+    ("INOVA" + [char]0x00C7 + [char]0x00C3 + "O")
+)
 $Global:DestinationLibraryMap = @{}
 $Global:IsPaused = $false
 $Global:StopRequested = $false
