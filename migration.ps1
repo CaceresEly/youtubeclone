@@ -1145,8 +1145,36 @@ foreach ($row in $migrationData) {
             continue
         }
     }
-    if (-not (Test-Path -Path $sourceFolder)) {
-        $msg = "Source path not found."
+    # Diagnostic output for source path validation (no changes to source selection).
+    Write-Host "----------------------------------------" -ForegroundColor Cyan
+    Write-Host "DEBUG - Excel row: $excelRowNumber" -ForegroundColor Cyan
+    Write-Host "DEBUG - Source Folder: [$($row.'Source Folder')]"
+    Write-Host "DEBUG - UNC Source Folder: [$($row.'UNC Source Folder')]"
+    Write-Host "DEBUG - UNC Folder: [$($row.'UNC Folder')]"
+    Write-Host "DEBUG - Selected source: [$sourceFolder]"
+    $sourcePathExists = Test-Path -LiteralPath $sourceFolder
+    Write-Host "DEBUG - Path exists: $sourcePathExists"
+    Write-Host "----------------------------------------" -ForegroundColor Cyan
+
+    if (-not $sourcePathExists) {
+        # Save detailed diagnostics inside the existing log Message field.
+        # Save-Logs automatically includes this field in MigrationSummary_*.txt and MigrationLog_*.csv.
+        $sourceExcel = [string]$row.'Source Folder'
+        $uncSourceExcel = [string]$row.'UNC Source Folder'
+        $uncFolderExcel = [string]$row.'UNC Folder'
+        $debugLines = @(
+            'Source path not found.'
+            "DEBUG - Excel row: $excelRowNumber"
+            "DEBUG - Source Folder: [$sourceExcel]"
+            "DEBUG - UNC Source Folder: [$uncSourceExcel]"
+            "DEBUG - UNC Folder: [$uncFolderExcel]"
+            "DEBUG - Selected source (raw): [$sourceFolderRaw]"
+            "DEBUG - Selected source (normalized): [$sourceFolder]"
+            "DEBUG - Path exists (LiteralPath): $sourcePathExists"
+            "DEBUG - Windows user: $([System.Security.Principal.WindowsIdentity]::GetCurrent().Name)"
+            "DEBUG - PowerShell process: $PID"
+        )
+        $msg = $debugLines -join [Environment]::NewLine
         Write-Host "The source path for '${displayName}' was not found." -ForegroundColor Yellow
         Add-LogEntry -Status "ERROR" -Type "PATH" -SourcePath $sourceFolder -DestinationPath $finalDestinationFolder -Message $msg -ExcelRow $excelRowNumber -Description $displayName
         Add-MatrixEntry -ExcelRow $excelRowNumber -Description $displayName -SourcePath $sourceFolder -DestinationUrl $finalDestinationFolder -Status "ERROR" -Message $msg
