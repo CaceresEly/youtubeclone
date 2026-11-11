@@ -1,0 +1,146 @@
+ROTEIRO DE DEMONSTRAÇÃO — GOVERNANÇA POWER PLATFORM | BORGWARNER
+Cenário: demanda APROVADA em todas as etapas (AP1, AP2, AP3, AP4)
+Objetivo: acompanhar em outro monitor enquanto apresenta.
+Legenda: [MANUAL] ação do apresentador | [AUTOMÁTICO] ação dos fluxos.
+
+============================================================
+1. RECEBIMENTO DA DEMANDA — MICROSOFT FORMS
+============================================================
+[MANUAL] Abra o Forms de solicitação de demandas Power Platform.
+[MANUAL] Preencha uma demanda de demonstração e envie o formulário.
+[AUTOMÁTICO] AUT-01 recebe a resposta, valida os dados e cria o item na lista SharePoint:
+  (antiga) ETTS Itatiba - DPA - Lista de Processos.
+[AUTOMÁTICO] Gera IDDemanda (formato DEM-0000), cria a pasta correspondente e envia notificações.
+[CONFERIR] Encontre a demanda pelo IDDemanda. Status inicial: RECEBIDA.
+
+============================================================
+2. TRIAGEM E ANÁLISE
+============================================================
+[MANUAL] Abra o item recém-criado na lista principal.
+[MANUAL] Preencha os campos de triagem pertinentes, incluindo:
+  - CriticidadeFinal
+  - RequerCoE
+[MANUAL] Altere Status para EM ANÁLISE e salve.
+[CONFERIR] O item deve aparecer como Em análise.
+[MANUAL] Preencha o campo ResumoAnalise (Resumo da análise) com o parecer da triagem.
+[MANUAL] Altere Status para AGUARDANDO APROVAÇÃO e salve.
+[AUTOMÁTICO] Fluxo AUT-06 a AUT-09 consulta a matriz de aprovadores, cria AP1 e envia notificações.
+[CONFERIR] Na lista Aprovações, verifique a etapa AP1 com Decisao = Pendente.
+
+============================================================
+3. AP1 — APROVAÇÃO DA DEMANDA
+============================================================
+[MANUAL] Abra o e-mail ou Microsoft Approvals referente à AP1.
+[MANUAL] Aprove a solicitação com a conta de demonstração.
+  Se houver mais de um aprovador obrigatório, todos devem aprovar.
+[AUTOMÁTICO] AUT-08 registra a resposta e AUT-09 consolida as decisões AP1.
+[AUTOMÁTICO] Status da demanda passa para APROVADA PARA DESENVOLVIMENTO.
+[CONFERIR] Lista Aprovações: AP1 = Aprovada; lista principal: status atualizado.
+
+============================================================
+4. AUTORIZAÇÃO E INÍCIO DO DESENVOLVIMENTO
+============================================================
+[MANUAL] Na demanda, confira/preencha os campos:
+  - Desenvolvedor
+  - BackupDesenvolvedor
+[MANUAL] Altere InicioDesenvolvimentoAutorizado para SIM e salve.
+[AUTOMÁTICO] AUT-11 muda o status para EM DESENVOLVIMENTO.
+[CONFERIR] Status = Em desenvolvimento.
+
+============================================================
+5. EVIDÊNCIAS DE TESTES E AP2 — ACEITE FUNCIONAL
+============================================================
+[MANUAL] Abra a pasta da demanda na biblioteca Evidências e Documentação.
+[MANUAL] Envie o arquivo de evidência de testes.
+[MANUAL] Nos metadados do arquivo, informe:
+  - DemandaID = ID da demanda correspondente
+  - TipoArquivo = Evidência de teste
+[AUTOMÁTICO] AUT-12 de metadados auxilia na identificação da demanda e alerta se faltar classificação.
+[MANUAL] Na lista principal, marque TestesRegistrados = SIM e salve.
+[AUTOMÁTICO] AUT-12 valida a presença das evidências e cria a aprovação AP2 para o responsável funcional.
+[CONFERIR] Aprovações: AP2 = Pendente; e-mail de aprovação recebido.
+[MANUAL] No Microsoft Approvals, APROVE a AP2.
+[AUTOMÁTICO] AUT-08 registra a decisão; o consolidador AP2 altera o status para EM DOCUMENTAÇÃO.
+[CONFERIR] AP2 = Aprovada; Status = Em documentação.
+
+============================================================
+6. DOCUMENTAÇÃO FUNCIONAL E TÉCNICA — AP3
+============================================================
+[MANUAL] Na biblioteca Evidências e Documentação, envie os documentos:
+  - Documentação funcional
+  - Documentação técnica
+[MANUAL] Para cada arquivo, preencha os metadados:
+  - DemandaID = ID da demanda
+  - TipoArquivo = Documentação funcional OU Documentação técnica, conforme o arquivo
+[MANUAL] Na lista principal, altere DocumentacaoCompleta para SIM e salve.
+[AUTOMÁTICO] AUT-13 valida os arquivos e a aprovação AP2 e cria AP3.
+  A composição dos aprovadores inclui responsável funcional e CoE;
+  quando a demanda tem integração, inclui também o aprovador de TI.
+[CONFERIR] Aprovações: AP3 = Pendente; notificação recebida.
+[MANUAL] Abra o Microsoft Approvals e APROVE AP3.
+  Todos os aprovadores exigidos devem aprovar.
+[AUTOMÁTICO] AUT-08 registra a decisão; o consolidador AP3 atualiza o status para AGUARDANDO APROVAÇÃO FINAL.
+[CONFERIR] AP3 = Aprovada; Status = Aguardando aprovação final.
+
+============================================================
+7. REQUISITOS DE PRODUÇÃO E AP4 — AUTORIZAÇÃO FINAL
+============================================================
+[MANUAL] Confira na demanda:
+  - TestesRegistrados = Sim
+  - DocumentacaoCompleta = Sim
+  - Desenvolvedor preenchido
+  - BackupDesenvolvedor preenchido
+  - PlanoSuporteDefinido = Sim
+[MANUAL] Se PlanoSuporteDefinido estiver como NÃO, altere para SIM e salve.
+  IMPORTANTE: confirme que o plano de suporte foi realmente definido antes de marcar Sim.
+[AUTOMÁTICO] AUT-14 valida também as evidências, os documentos e as aprovações AP1/AP2/AP3.
+[AUTOMÁTICO] Quando todos os requisitos estão completos, cria AP4 e notifica o aprovador final.
+[CONFERIR] Aprovações: AP4 = Pendente; e-mail recebido.
+[MANUAL] Abra Microsoft Approvals e APROVE AP4.
+[AUTOMÁTICO] AUT-08 registra a decisão; o consolidador AP4 altera o status para LIBERADA PARA PRODUÇÃO.
+[AUTOMÁTICO] Envia e-mails de liberação para produção.
+[CONFERIR] AP4 = Aprovada; Status = Liberada para produção.
+
+OBSERVAÇÃO DE DEMONSTRAÇÃO:
+O AUT-14 foi configurado para reavaliar demandas Em documentação quando
+DocumentacaoCompleta e PlanoSuporteDefinido estão como Sim, além das demandas
+Aguardando aprovação final. Evite alternar campos repetidamente ou editar
+uma demanda já encerrada. Para o cenário aprovado, siga a sequência acima.
+
+============================================================
+8. ENTRADA EM PRODUÇÃO E ENCERRAMENTO — AUT-15
+============================================================
+[MANUAL] Após confirmar a implantação da solução, abra a demanda na lista principal.
+[MANUAL] Preencha DataEntradaProducao com a data efetiva de entrada em produção e salve.
+  Não altere o status manualmente para Encerrada.
+[AUTOMÁTICO] AUT-15 verifica que o status é Liberada para produção,
+  que DataEntradaProducao está preenchida e que AP1, AP2, AP3 e AP4 foram aprovadas.
+[AUTOMÁTICO] Atualiza Status para ENCERRADA e grava DataEncerramento.
+[AUTOMÁTICO] Envia os e-mails de encerramento.
+[CONFERIR] Lista principal: Status = Encerrada, DataEntradaProducao e DataEncerramento preenchidas.
+[CONFERIR] E-mail com assunto [Power Platform] Demanda encerrada - IDDemanda.
+
+============================================================
+RESUMO RÁPIDO — O QUE EU ALTERO MANUALMENTE?
+============================================================
+01. Forms: preencher e ENVIAR → Status Recebida (automático).
+02. SharePoint: preencher CriticidadeFinal e RequerCoE; Status = Em análise.
+03. SharePoint: preencher ResumoAnalise; Status = Aguardando aprovação.
+04. Approvals: APROVAR AP1 → Aprovada para desenvolvimento (automático).
+05. SharePoint: preencher Desenvolvedor e BackupDesenvolvedor;
+    InicioDesenvolvimentoAutorizado = Sim → Em desenvolvimento (automático).
+06. Biblioteca: enviar evidência e classificar metadados;
+    SharePoint: TestesRegistrados = Sim → AP2 criada (automático).
+07. Approvals: APROVAR AP2 → Em documentação (automático).
+08. Biblioteca: enviar documentação funcional e técnica, classificar metadados;
+    SharePoint: DocumentacaoCompleta = Sim → AP3 criada (automático).
+09. Approvals: APROVAR AP3 → Aguardando aprovação final (automático).
+10. SharePoint: conferir requisitos; PlanoSuporteDefinido = Sim → AP4 criada (automático).
+11. Approvals: APROVAR AP4 → Liberada para produção (automático).
+12. SharePoint: DataEntradaProducao = data efetiva → Encerrada (automático).
+
+LEMBRETES
+- Durante esta demonstração, use a conta de teste configurada na matriz de aprovadores.
+- Não reprove nenhuma etapa: o cenário apresentado é somente de APROVAÇÃO.
+- Depois da apresentação, testar separadamente os cenários de reprovação.
+- Antes do uso real, restaurar os aprovadores corporativos na matriz.
